@@ -16,6 +16,12 @@ using Elsa.Studio.Localization.BlazorServer.Extensions;
 using Elsa.Studio.Localization.Models;
 using Elsa.Studio.Localization.Options;
 using Elsa.Studio.Translations;
+using ElsaStudioServer;
+using Elsa.Studio.Contracts;
+using Elsa.Studio.Login.BlazorServer.Services;
+using Elsa.Studio.Login.Contracts;
+using Blazored.LocalStorage;
+using Elsa.Studio.Login.Services;
 
 // Build the host.
 var builder = WebApplication.CreateBuilder(args);
@@ -44,9 +50,28 @@ var localizationConfig = new LocalizationConfig
 
 builder.Services.AddCore();
 builder.Services.AddShell(options => configuration.GetSection("Shell").Bind(options));
+builder.Services.AddKeycloak(builder.Configuration.GetSection("Oidc"));
+builder.Services.AddDataProtection();
 
 builder.Services.AddRemoteBackend(backendApiConfig);
-builder.Services.AddLoginModule();
+
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IUnauthorizedComponentProvider, LoginPageProvider>();
+builder.Services.AddScoped<IJwtAccessor, BlazorServerJwtAccessor>();
+
+// Register HttpContextAccessor.
+builder.Services.AddHttpContextAccessor();
+
+// Register Blazored LocalStorage.
+builder.Services.AddBlazoredLocalStorage();
+
+// Register JWT services.
+builder.Services.AddSingleton<IJwtParser, BlazorServerJwtParser>();
+
+
+builder.Services.AddScoped<ICredentialsValidator, DefaultCredentialsValidator>();
+
+//builder.Services.AddLoginModule();
 builder.Services.AddDashboardModule();
 builder.Services.AddWorkflowsModule();
 builder.Services.AddWorkflowContextsModule();
@@ -79,9 +104,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseElsaLocalization();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapBlazorHub();
