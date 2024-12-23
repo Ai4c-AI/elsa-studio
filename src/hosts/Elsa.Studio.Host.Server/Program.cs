@@ -22,6 +22,7 @@ using Elsa.Studio.Login.BlazorServer.Services;
 using Elsa.Studio.Login.Contracts;
 using Blazored.LocalStorage;
 using Elsa.Studio.Login.Services;
+using Elsa.Studio.Host.Server;
 
 // Build the host.
 var builder = WebApplication.CreateBuilder(args);
@@ -40,7 +41,7 @@ builder.Services.AddServerSideBlazor(options =>
 var backendApiConfig = new BackendApiConfig
 {
     ConfigureBackendOptions = options => configuration.GetSection("Backend").Bind(options),
-    ConfigureHttpClientBuilder = options => options.AuthenticationHandler = typeof(AuthenticatingApiHttpMessageHandler), 
+    ConfigureHttpClientBuilder = options => options.AuthenticationHandler = typeof(KeyCloackAuthenticatingApiHttpMessageHandler), 
 };
 
 var localizationConfig = new LocalizationConfig

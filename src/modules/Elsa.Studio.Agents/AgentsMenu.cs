@@ -20,27 +20,27 @@ public class AgentsMenu(ILocalizer localizer) : IMenuProvider, IMenuGroupProvide
                 Text = localizer["Agents"],
                 GroupName = MenuItemGroups.General.Name
             },
-            new()
-            {
-                Icon = AgentIcons.AI,
-                Text = localizer["Agents"],
-                GroupName = MenuItemGroups.Settings.Name,
-                SubMenuItems =
-                [
-                    new MenuItem
-                    {
-                        Icon = Icons.Material.Outlined.Key,
-                        Href = "ai/api-keys",
-                        Text = localizer["API Keys"]
-                    },
-                    new MenuItem
-                    {
-                        Icon = Icons.Material.Outlined.MiscellaneousServices,
-                        Href = "ai/services",
-                        Text = localizer["Services"]
-                    }
-                ]
-            }
+            //new()
+            //{
+            //    Icon = AgentIcons.AI,
+            //    Text = localizer["Agents"],
+            //    GroupName = MenuItemGroups.Settings.Name,
+            //    SubMenuItems =
+            //    [
+            //        new MenuItem
+            //        {
+            //            Icon = Icons.Material.Outlined.Key,
+            //            Href = "ai/api-keys",
+            //            Text = localizer["API Keys"]
+            //        },
+            //        new MenuItem
+            //        {
+            //            Icon = Icons.Material.Outlined.MiscellaneousServices,
+            //            Href = "ai/services",
+            //            Text = localizer["Services"]
+            //        }
+            //    ]
+            //}
         };
 
         return new ValueTask<IEnumerable<MenuItem>>(menuItems);

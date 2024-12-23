@@ -1,4 +1,3 @@
-using Elsa.Agents;
 using Elsa.Studio.Agents.Client;
 using Elsa.Studio.Agents.UI.Validators;
 using Elsa.Studio.Components;
@@ -22,30 +21,33 @@ public partial class Agent : StudioComponentBase
         set => _agent.ExecutionSettings.ResponseFormat = value ? "json_object" : "string";
     }
 
-    private ICollection<ServiceModel> AvailableServices { get; set; } = [];
+    private ICollection<object> AvailableServices { get; set; } = [];
     private IReadOnlyCollection<string> SelectedServices { get; set; } = [];
-    
-    private ICollection<PluginDescriptorModel> AvailablePlugins { get; set; } = [];
+
+    private ICollection<object> AvailablePlugins { get; set; } = [];
     private IReadOnlyCollection<string> SelectedPlugins { get; set; } = [];
 
 
     private MudForm _form = default!;
     private AgentInputModelValidator _validator = default!;
     private AgentModel _agent = new();
-    private InputVariableConfig? _inputVariableBackup;
-    private MudTable<InputVariableConfig> _inputVariableTable;
+    private AgentInputVariableConfig? _inputVariableBackup;
+    private MudTable<AgentInputVariableConfig> _inputVariableTable;
+
+    private AgentOutputVariableConfig? _outputVariableBackup;
+    private MudTable<AgentOutputVariableConfig> _outputVariableTable;
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
         var apiClient = await ApiClientProvider.GetApiAsync<IAgentsApi>();
         _validator = new AgentInputModelValidator(apiClient);
-        var servicesApi = await ApiClientProvider.GetApiAsync<IServicesApi>();
-        var pluginsApi = await ApiClientProvider.GetApiAsync<IPluginsApi>();
-        var servicesResponseList = await servicesApi.ListAsync();
-        var pluginsResponseList = await pluginsApi.ListAsync();
-        AvailableServices = servicesResponseList.Items;
-        AvailablePlugins = pluginsResponseList.Items;
+        //var servicesApi = await ApiClientProvider.GetApiAsync<IServicesApi>();
+        //var pluginsApi = await ApiClientProvider.GetApiAsync<IPluginsApi>();
+        //var servicesResponseList = await servicesApi.ListAsync();
+        //var pluginsResponseList = await pluginsApi.ListAsync();
+        //AvailableServices = servicesResponseList.Items;
+        //AvailablePlugins = pluginsResponseList.Items;
     }
 
     /// <inheritdoc />
@@ -64,8 +66,8 @@ public partial class Agent : StudioComponentBase
         if (!_form.IsValid)
             return;
 
-        _agent.Services = SelectedServices.ToList();
-        _agent.Plugins = SelectedPlugins.ToList();
+        //_agent.Services = SelectedServices.ToList();
+        //_agent.Plugins = SelectedPlugins.ToList();
         var apiClient = await ApiClientProvider.GetApiAsync<IAgentsApi>();
         _agent = await apiClient.UpdateAsync(AgentId, _agent);
         Snackbar.Add("Agent successfully updated.", Severity.Success);
@@ -74,7 +76,7 @@ public partial class Agent : StudioComponentBase
 
     private void OnAddInputVariableClicked()
     {
-        var newInputVariable = new InputVariableConfig
+        var newInputVariable = new AgentInputVariableConfig
         {
             Name = "Variable1",
             Type = "string"
@@ -95,8 +97,8 @@ public partial class Agent : StudioComponentBase
 
     private void BackupInputVariable(object obj)
     {
-        var inputVariable = (InputVariableConfig)obj;
-        _inputVariableBackup = new InputVariableConfig
+        var inputVariable = (AgentInputVariableConfig)obj;
+        _inputVariableBackup = new AgentInputVariableConfig
         {
             Name = inputVariable.Name,
             Type = inputVariable.Type,
@@ -106,7 +108,7 @@ public partial class Agent : StudioComponentBase
 
     private void RestoreInputVariable(object obj)
     {
-        var inputVariable = (InputVariableConfig)obj;
+        var inputVariable = (AgentInputVariableConfig)obj;
         inputVariable.Name = _inputVariableBackup!.Name;
         inputVariable.Type = _inputVariableBackup.Type;
         inputVariable.Description = _inputVariableBackup.Description;
@@ -118,9 +120,62 @@ public partial class Agent : StudioComponentBase
         _inputVariableBackup = null;
     }
 
-    private Task DeleteInputVariable(InputVariableConfig item)
+    private Task DeleteInputVariable(AgentInputVariableConfig item)
     {
         _agent.InputVariables.Remove(item);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private void OnAddOutputVariableClicked()
+    {
+        var newOutputVariable = new AgentOutputVariableConfig
+        {
+            Name = "Variable1",
+            Type = "string"
+        };
+
+        _agent.OutputVariables.Add(newOutputVariable);
+
+        // Need to do it this way, otherwise MudTable doesn't show the item in edit mode.
+        _ = Task.Delay(1).ContinueWith(_ =>
+        {
+            InvokeAsync(() =>
+            {
+                _outputVariableTable.SetEditingItem(newOutputVariable);
+                StateHasChanged();
+            });
+        });
+    }
+
+    private void BackupOutputVariable(object obj)
+    {
+        var outputVariable = (AgentOutputVariableConfig)obj;
+        _outputVariableBackup = new AgentOutputVariableConfig
+        {
+            Name = outputVariable.Name,
+            Type = outputVariable.Type,
+            Description = outputVariable.Description
+        };
+    }
+
+    private void RestoreOutputVariable(object obj)
+    {
+        var outputVariable = (AgentOutputVariableConfig)obj;
+        outputVariable.Name = _outputVariableBackup!.Name;
+        outputVariable.Type = _outputVariableBackup.Type;
+        outputVariable.Description = _outputVariableBackup.Description;
+        _outputVariableBackup = null;
+    }
+
+    private void CommitOutputVariable(object obj)
+    {
+        _outputVariableBackup = null;
+    }
+
+    private Task DeleteOutputVariable(AgentOutputVariableConfig item)
+    {
+        _agent.OutputVariables.Remove(item);
         StateHasChanged();
         return Task.CompletedTask;
     }

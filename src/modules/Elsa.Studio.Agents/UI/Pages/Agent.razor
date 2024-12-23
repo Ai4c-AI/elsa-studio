@@ -1,5 +1,5 @@
 @page "/ai/agents/{AgentId}"
-@using Elsa.Agents
+@using Ai4c.Agents
 @using Variant = MudBlazor.Variant
 @inherits StudioComponentBase
 @inject ILocalizer Localizer
@@ -32,12 +32,12 @@
                       Variant="Variant.Outlined"
                       HelperText="@Localizer["A description about the role and purpose of this agent."]"/>
 
-        <MudTextField @bind-Value="_agent.FunctionName"
+@*         <MudTextField @bind-Value="_agent.FunctionName"
                       For="@(() => _agent.FunctionName)"
                       Immediate="false"
                       Label="@Localizer["Function Name"]"
                       Variant="Variant.Outlined"
-                      HelperText="@Localizer["A technical name for the function"]"/>
+                      HelperText="@Localizer["A technical name for the function"]"/> *@
 
         <MudTextField @bind-Value="_agent.PromptTemplate"
                       For="@(() => _agent.PromptTemplate)"
@@ -49,7 +49,7 @@
     </MudStack>
 </MudTabPanel>
 <MudTabPanel Text="@Localizer["Input"]">
-    <MudTable T="InputVariableConfig"
+    <MudTable T="AgentInputVariableConfig"
               @ref="@_inputVariableTable"
               Items="_agent.InputVariables"
               Dense="true"
@@ -117,6 +117,77 @@
     </MudTable>
     <MudButton Class="mt-2" Color="Color.Secondary" Variant="Variant.Filled" OnClick="@OnAddInputVariableClicked">@Localizer["Add"]</MudButton>
 </MudTabPanel>
+
+<MudTabPanel Text="@Localizer["Output"]">
+    <MudTable T="AgentOutputVariableConfig"
+              @ref="@_outputVariableTable"
+              Items="_agent.OutputVariables"
+              Dense="true"
+              Hover="true"
+              CanCancelEdit="true"
+              EditTrigger="TableEditTrigger.EditButton"
+              SelectOnRowClick="true"
+              IsEditRowSwitchingBlocked="false"
+              RowEditPreview="BackupOutputVariable"
+              RowEditCancel="RestoreOutputVariable"
+              RowEditCommit="CommitOutputVariable">
+        <ColGroup>
+            <col/>
+            <col/>
+            <col/>
+            <col style="width:50px;"/>
+            <col style="width:50px;"/>
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>@Localizer["Name"]</MudTh>
+            <MudTh>@Localizer["Type"]</MudTh>
+            <MudTh>@Localizer["Description"]</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Type">@context.Type</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteOutputVariable(context)"/>
+            </MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name"
+                              For="@(() => context.Name)"
+                              Immediate="false"
+                              Label="@Localizer["Name"]"
+                              Variant="Variant.Outlined"
+                              HelperText="@Localizer["The technical name of the input variable"]"/>
+            </MudTd>
+            <MudTd DataLabel="Type">
+                <MudSelect @bind-Value="@context.Type"
+                           T="string"
+                           For="@(() => context.Type)"
+                           Immediate="false"
+                           Label="@Localizer["Type"]"
+                           Variant="Variant.Outlined"
+                           HelperText="@Localizer["The .NET type of the input variable."]">
+                    <MudSelectItem T="string" Value="@("string")">@Localizer["string"]</MudSelectItem>
+                    <MudSelectItem T="string" Value="@("int")">@Localizer["int"]</MudSelectItem>
+                    <MudSelectItem T="string" Value="@("object")">@Localizer["object"]</MudSelectItem>
+                </MudSelect>
+            </MudTd>
+            <MudTd DataLabel="@Localizer["Description"]">
+                <MudTextField @bind-Value="@context.Description"
+                              For="@(() => context.Description)"
+                              Immediate="false"
+                              Label="@Localizer["Description"]"
+                              Variant="Variant.Outlined"
+                              HelperText="@Localizer["A description about the role and purpose of this input variable."]"/>
+            </MudTd>
+            <MudTd></MudTd>
+        </RowEditingTemplate>
+    </MudTable>
+    <MudButton Class="mt-2" Color="Color.Secondary" Variant="Variant.Filled" OnClick="@OnAddOutputVariableClicked">@Localizer["Add"]</MudButton>
+</MudTabPanel>
+@*
 <MudTabPanel Text="@Localizer["Output"]">
     <MudStack Spacing="8">
         <MudTextField @bind-Value="_agent.OutputVariable.Description"
@@ -226,6 +297,7 @@
                      Label="@Localizer["Use JSON Response"]"/>
     </MudStack>
 </MudTabPanel>
+*@
 </MudTabs>
 </MudForm>
 <MudCardActions>

@@ -1,5 +1,4 @@
 using Blazored.FluentValidation;
-using Elsa.Agents;
 using Elsa.Studio.Agents.Client;
 using Elsa.Studio.Agents.UI.Validators;
 using Elsa.Studio.Contracts;
@@ -18,16 +17,16 @@ public partial class CreateAgentDialog
     private EditContext _editContext = default!;
     private FluentValidationValidator _fluentValidationValidator = default!;
     private AgentInputModelValidator _validator = default!;
-    
+
     /// The default name of the agent to create.
     [Parameter] public string AgentName { get; set; } = "";
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
     [Inject] private IBackendApiClientProvider ApiClientProvider { get; set; } = default!;
     [Inject] private IActivityRegistry ActivityRegistry { get; set; } = default!;
     [Inject] private IActivityDisplaySettingsRegistry ActivityDisplaySettingsRegistry { get; set; } = default!;
-    private ICollection<ServiceModel> AvailableServices { get; set; } = [];
+    private ICollection<object> AvailableServices { get; set; } = [];
     private IReadOnlyCollection<string> SelectedServices { get; set; } = [];
-    private ICollection<PluginDescriptorModel> AvailablePlugins { get; set; } = [];
+    private ICollection<object> AvailablePlugins { get; set; } = [];
     private IReadOnlyCollection<string> SelectedPlugins { get; set; } = [];
 
     /// <inheritdoc />
@@ -42,13 +41,13 @@ public partial class CreateAgentDialog
         _agentInputModel.ExecutionSettings.ResponseFormat = "json_object";
         _editContext = new EditContext(_agentInputModel);
         var agentsApi = await ApiClientProvider.GetApiAsync<IAgentsApi>();
-        var servicesApi = await ApiClientProvider.GetApiAsync<IServicesApi>();
-        var pluginsApi = await ApiClientProvider.GetApiAsync<IPluginsApi>();
+        //var servicesApi = await ApiClientProvider.GetApiAsync<IServicesApi>();
+        //var pluginsApi = await ApiClientProvider.GetApiAsync<IPluginsApi>();
         _validator = new AgentInputModelValidator(agentsApi);
-        var servicesResponseList = await servicesApi.ListAsync();
-        var pluginsResponseList = await pluginsApi.ListAsync();
-        AvailableServices = servicesResponseList.Items;
-        AvailablePlugins = pluginsResponseList.Items;
+        //var servicesResponseList = await servicesApi.ListAsync();
+        //var pluginsResponseList = await pluginsApi.ListAsync();
+        //AvailableServices = servicesResponseList.Items;
+        //AvailablePlugins = pluginsResponseList.Items;
         SelectedServices = _agentInputModel.Services.ToList().AsReadOnly();
         SelectedPlugins = _agentInputModel.Plugins.ToList().AsReadOnly();
     }
@@ -61,7 +60,7 @@ public partial class CreateAgentDialog
 
     private async Task OnSubmitClicked()
     {
-        if(!await _fluentValidationValidator.ValidateAsync())
+        if (!await _fluentValidationValidator.ValidateAsync())
             return;
 
         await OnValidSubmit();

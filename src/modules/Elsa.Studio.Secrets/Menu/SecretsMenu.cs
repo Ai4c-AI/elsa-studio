@@ -15,13 +15,13 @@ public class SecretsMenu(ILocalizer localizer) : IMenuProvider
     {
         var menuItems = new List<MenuItem>
         {
-            new()
-            {
-                Icon = Icons.Material.Filled.Key,
-                Href = "secrets",
-                Text = localizer["Secrets"],
-                GroupName = MenuItemGroups.Settings.Name
-            }
+            //new()
+            //{
+            //    Icon = Icons.Material.Filled.Key,
+            //    Href = "secrets",
+            //    Text = localizer["Secrets"],
+            //    GroupName = MenuItemGroups.Settings.Name
+            //}
         };
 
         return new ValueTask<IEnumerable<MenuItem>>(menuItems);

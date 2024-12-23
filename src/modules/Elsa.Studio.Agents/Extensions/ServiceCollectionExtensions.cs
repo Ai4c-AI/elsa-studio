@@ -20,9 +20,6 @@ public static class ServiceCollectionExtensions
                 .AddScoped<IMenuProvider, AgentsMenu>()
                 .AddScoped<IMenuGroupProvider, AgentsMenu>()
                 .AddRemoteApi<IAgentsApi>(backendApiConfig)
-                .AddRemoteApi<IApiKeysApi>(backendApiConfig)
-                .AddRemoteApi<IServicesApi>(backendApiConfig)
-                .AddRemoteApi<IPluginsApi>(backendApiConfig)
                 .AddActivityDisplaySettingsProvider<AgentsActivityDisplaySettingsProvider>()
             ;
     }

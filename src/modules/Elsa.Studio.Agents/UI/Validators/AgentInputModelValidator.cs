@@ -1,4 +1,3 @@
-using Elsa.Agents;
 using Elsa.Studio.Agents.Client;
 using FluentValidation;
 
@@ -13,7 +12,7 @@ public class AgentInputModelValidator : AbstractValidator<AgentInputModel>
     public AgentInputModelValidator(IAgentsApi agentsApi)
     {
         RuleFor(x => x.Name).NotEmpty().WithMessage("Please enter a name for the agent.");
-        
+
         RuleFor(x => x.Name)
             .MustAsync(async (context, name, cancellationToken) =>
             {
