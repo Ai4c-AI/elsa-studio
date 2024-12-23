@@ -23,6 +23,9 @@ using Elsa.Studio.Login.Contracts;
 using Blazored.LocalStorage;
 using Elsa.Studio.Login.Services;
 using Elsa.Studio.Host.Server;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Elsa.Studio.Branding;
+using Elsa.Studio.Host.Server;
 
 // Build the host.
 var builder = WebApplication.CreateBuilder(args);
@@ -49,7 +52,8 @@ var localizationConfig = new LocalizationConfig
     ConfigureLocalizationOptions = options => configuration.GetSection(LocalizationOptions.LocalizationSection).Bind(options),
 };
 
-builder.Services.AddCore();
+builder.Services.AddScoped<IBrandingProvider, StudioBrandingProvider>();
+builder.Services.AddCore().Replace(new ServiceDescriptor(typeof(IBrandingProvider), typeof(StudioBrandingProvider), ServiceLifetime.Scoped));
 builder.Services.AddShell(options => configuration.GetSection("Shell").Bind(options));
 builder.Services.AddKeycloak(builder.Configuration.GetSection("Oidc"));
 builder.Services.AddDataProtection();
