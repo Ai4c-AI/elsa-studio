@@ -133,7 +133,7 @@
     <value>90天</value>
   </data>
   <data name="A brief description of the agent." xml:space="preserve">
-    <value>此代理的简要描述。</value>
+    <value>此智能体的简要描述。</value>
   </data>
   <data name="A brief description of the secret." xml:space="preserve">
     <value>此密钥的简要描述。</value>
@@ -160,7 +160,7 @@
     <value>默认值。</value>
   </data>
   <data name="A description about the role and purpose of this agent." xml:space="preserve">
-    <value>关于此代理的角色和目的的描述。</value>
+    <value>关于此智能体的角色和目的的描述。</value>
   </data>
   <data name="A description about the role and purpose of this input variable." xml:space="preserve">
     <value>关于此输入变量的角色和目的的描述。</value>
@@ -172,7 +172,7 @@
     <value>在设计器中显示的此活动的描述。</value>
   </data>
   <data name="A technical name for the function" xml:space="preserve">
-    <value>此代理执行的功能名称。例如：编写代码（WriteCode）</value>
+    <value>此智能体执行的功能名称。例如：编写代码（WriteCode）</value>
   </data>
   <data name="Acknowledge Datasource Event" xml:space="preserve">
     <value>确认数据源事件</value>
@@ -202,10 +202,10 @@
     <value>添加变量</value>
   </data>
   <data name="Agent" xml:space="preserve">
-    <value>代理</value>
+    <value>智能体</value>
   </data>
   <data name="Agents" xml:space="preserve">
-    <value>代理列表</value>
+    <value>智能体列表</value>
   </data>
   <data name="Aggregation" xml:space="preserve">
     <value>聚合</value>
@@ -289,7 +289,7 @@
     <value>关联ID</value>
   </data>
   <data name="Create Agent" xml:space="preserve">
-    <value>创建代理</value>
+    <value>创建智能体</value>
   </data>
   <data name="Create API Key" xml:space="preserve">
     <value>创建 API Key</value>
@@ -574,7 +574,7 @@
     <value>否</value>
   </data>
   <data name="No agents found" xml:space="preserve">
-    <value>未找到任何代理</value>
+    <value>未找到任何智能体</value>
   </data>
   <data name="No API keys found" xml:space="preserve">
     <value>未找到任何 API keys</value>
@@ -838,13 +838,13 @@
     <value>可生成的最大tokens数量。留空时为可用的最大值。</value>
   </data>
   <data name="The name of the agent." xml:space="preserve">
-    <value>代理的名称。</value>
+    <value>智能体的名称。</value>
   </data>
   <data name="The name of the function that the agent will execute." xml:space="preserve">
-    <value>代理将执行的函数的名称。</value>
+    <value>智能体将执行的函数的名称。</value>
   </data>
   <data name="The name of the new agent." xml:space="preserve">
-    <value>新代理的名称。</value>
+    <value>新智能体的名称。</value>
   </data>
   <data name="The name of the new secret." xml:space="preserve">
     <value>新 secret 的名称。</value>
@@ -859,19 +859,19 @@
     <value>当Token重复时的惩罚。重复惩罚值越高，生成重复Token的可能性就越低，从而促进生成更多样化的文本。</value>
   </data>
   <data name="The plugins that the agent can use." xml:space="preserve">
-    <value>此代理可用的插件列表</value>
+    <value>此智能体可用的插件列表</value>
   </data>
   <data name="The secret value." xml:space="preserve">
     <value>此 secret 的值</value>
   </data>
   <data name="The services that the agent requires." xml:space="preserve">
-    <value>此代理所需的服务列表</value>
+    <value>此智能体所需的服务列表</value>
   </data>
   <data name="The settings of the service in JSON format." xml:space="preserve">
     <value>服务的设置以JSON格式表示。</value>
   </data>
   <data name="The system prompt template that the agent will use." xml:space="preserve">
-    <value>系统提示模板，代理将使用该模板。</value>
+    <value>系统提示模板，智能体将使用该模板。</value>
   </data>
   <data name="The technical name of the API key." xml:space="preserve">
     <value>此 API key 的专业名称。</value>
@@ -976,7 +976,7 @@
     <value>已使用</value>
   </data>
   <data name="Used to define the initial instructions" xml:space="preserve">
-    <value>初始指令或上下文，用于定义Semantic Kernel代理如何生成内容。此模板指导代理的行为，并帮助它理解需要扮演的角色或执行的任务。</value>
+    <value>初始指令或上下文，用于定义Semantic Kernel智能体如何生成内容。此模板指导智能体的行为，并帮助它理解需要扮演的角色或执行的任务。</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>值</value>

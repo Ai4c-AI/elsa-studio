@@ -4,7 +4,6 @@ using Elsa.Studio.Agents.UI.Providers;
 using Elsa.Studio.Contracts;
 using Elsa.Studio.Models;
 using Elsa.Studio.Workflows.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
 namespace Elsa.Studio.Extensions;
@@ -20,6 +19,7 @@ public static class ServiceCollectionExtensions
                 .AddScoped<IMenuProvider, AgentsMenu>()
                 .AddScoped<IMenuGroupProvider, AgentsMenu>()
                 .AddRemoteApi<IAgentsApi>(backendApiConfig)
+                .AddRemoteApi<IModelProviderApi>(backendApiConfig)
                 .AddActivityDisplaySettingsProvider<AgentsActivityDisplaySettingsProvider>()
             ;
     }

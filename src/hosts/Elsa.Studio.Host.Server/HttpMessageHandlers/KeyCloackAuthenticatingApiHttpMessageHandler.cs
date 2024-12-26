@@ -2,6 +2,10 @@ using Elsa.Api.Client.Resources.Identity.Responses;
 using Elsa.Studio.Contracts;
 using Elsa.Studio.Login.Contracts;
 using ElsaStudioServer;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Components;
 using System.Net;
 using System.Net.Http.Headers;
 

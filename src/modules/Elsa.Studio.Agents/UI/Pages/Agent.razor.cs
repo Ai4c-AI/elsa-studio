@@ -1,9 +1,11 @@
 using Elsa.Studio.Agents.Client;
+using Elsa.Studio.Agents.Models;
 using Elsa.Studio.Agents.UI.Validators;
 using Elsa.Studio.Components;
 using Elsa.Studio.Contracts;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Globalization;
 
 namespace Elsa.Studio.Agents.UI.Pages;
 
@@ -27,6 +29,9 @@ public partial class Agent : StudioComponentBase
     private ICollection<object> AvailablePlugins { get; set; } = [];
     private IReadOnlyCollection<string> SelectedPlugins { get; set; } = [];
 
+    private ICollection<string> Providers { get; set; } = [];
+
+    private ICollection<LlmModelSetting> LlmProviderModels { get; set; } = [];
 
     private MudForm _form = default!;
     private AgentInputModelValidator _validator = default!;
@@ -42,12 +47,8 @@ public partial class Agent : StudioComponentBase
     {
         var apiClient = await ApiClientProvider.GetApiAsync<IAgentsApi>();
         _validator = new AgentInputModelValidator(apiClient);
-        //var servicesApi = await ApiClientProvider.GetApiAsync<IServicesApi>();
-        //var pluginsApi = await ApiClientProvider.GetApiAsync<IPluginsApi>();
-        //var servicesResponseList = await servicesApi.ListAsync();
-        //var pluginsResponseList = await pluginsApi.ListAsync();
-        //AvailableServices = servicesResponseList.Items;
-        //AvailablePlugins = pluginsResponseList.Items;
+        var modelProviderApi = await ApiClientProvider.GetApiAsync<IModelProviderApi>();
+        Providers = await modelProviderApi.GetLlmProvidersAsync();
     }
 
     /// <inheritdoc />
@@ -55,8 +56,9 @@ public partial class Agent : StudioComponentBase
     {
         var apiClient = await ApiClientProvider.GetApiAsync<IAgentsApi>();
         _agent = await apiClient.GetAsync(AgentId);
-        SelectedServices = _agent.Services.ToList().AsReadOnly();
-        SelectedPlugins = _agent.Plugins.ToList().AsReadOnly();
+        var modelProviderApi = await ApiClientProvider.GetApiAsync<IModelProviderApi>();
+        var provider = _agent?.AgentLlmConfig?.Provider;
+        LlmProviderModels = await modelProviderApi.GetLlmProviderModelsAsync(string.IsNullOrEmpty(provider) ? Providers.FirstOrDefault() ?? "azure-openai" : provider);
     }
 
     private async Task OnSaveClicked()
@@ -65,9 +67,6 @@ public partial class Agent : StudioComponentBase
 
         if (!_form.IsValid)
             return;
-
-        //_agent.Services = SelectedServices.ToList();
-        //_agent.Plugins = SelectedPlugins.ToList();
         var apiClient = await ApiClientProvider.GetApiAsync<IAgentsApi>();
         _agent = await apiClient.UpdateAsync(AgentId, _agent);
         Snackbar.Add("Agent successfully updated.", Severity.Success);
@@ -178,5 +177,16 @@ public partial class Agent : StudioComponentBase
         _agent.OutputVariables.Remove(item);
         StateHasChanged();
         return Task.CompletedTask;
+    }
+
+    private async Task OnProviderChanged(string newValue)
+    {
+        var modelProviderApi = await ApiClientProvider.GetApiAsync<IModelProviderApi>();
+        var provider = _agent?.AgentLlmConfig?.Provider;
+        LlmProviderModels = await modelProviderApi.GetLlmProviderModelsAsync(string.IsNullOrEmpty(provider)? Providers.FirstOrDefault() ?? "azure-openai" : provider);
+        if (_agent != null)
+        {
+            _agent.AgentLlmConfig.Model = LlmProviderModels.FirstOrDefault()?.Name;
+        } 
     }
 }
