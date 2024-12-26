@@ -24,8 +24,6 @@ public partial class Agents
     [Inject] private IActivityDisplaySettingsRegistry ActivityDisplaySettingsRegistry { get; set; } = default!;
     [Inject] private IFiles Files { get; set; } = default!;
     [Inject] private IDomAccessor DomAccessor { get; set; } = default!;
-    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
-
     private async Task<IAgentsApi> GetAgentsApiAsync()
     {
         return await ApiClientProvider.GetApiAsync<IAgentsApi>();
@@ -33,7 +31,6 @@ public partial class Agents
 
     private async Task<TableData<AgentModel>> ServerReload(TableState state, CancellationToken cancellationToken)
     {
-        var user = HttpContextAccessor?.HttpContext?.User;
         var apiClient = await GetAgentsApiAsync();
         var agents = await apiClient.ListAsync(cancellationToken);
 

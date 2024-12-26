@@ -1,9 +1,7 @@
-using Blazored.LocalStorage;
 using Elsa.Studio.Branding;
 using Elsa.Studio.Components;
 using Elsa.Studio.Contracts;
 using Elsa.Studio.Extensions;
-using Elsa.Studio.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -24,12 +22,17 @@ public partial class MainLayout : IDisposable
     [Inject] private IUnauthorizedComponentProvider UnauthorizedComponentProvider { get; set; } = default!;
     [Inject] private IFeatureService FeatureService { get; set; } = default!;
     [Inject] private IDialogService DialogService { get; set; } = default!;
-    [Inject] private IBrandingProvider  BrandingProvider { get; set; } = default!;
+    [Inject] private IBrandingProvider BrandingProvider { get; set; } = default!;
     [Inject] private IServiceProvider ServiceProvider { get; set; } = default!;
     [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
     private MudTheme CurrentTheme => ThemeService.CurrentTheme;
     private bool IsDarkMode => ThemeService.IsDarkMode;
+    private bool IsLogin { get; set; }
+    private bool IsUserLoggedIn { get; set; }
+    private string UserName { get; set; } = string.Empty;
     private RenderFragment UnauthorizedComponent => UnauthorizedComponentProvider.GetUnauthorizedComponent();
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -44,8 +47,14 @@ public partial class MainLayout : IDisposable
         if (AuthenticationState != null)
         {
             var authState = await AuthenticationState;
-            if (authState.User.Identity?.IsAuthenticated == true && !authState.User.Claims.IsExpired())
+            if (authState.User.Identity?.IsAuthenticated == true)
             {
+                UserName = authState.User?.Identity?.Name ?? "";
+                IsLogin = true;
+            }
+            if (authState.User?.Identity?.IsAuthenticated == true && !authState.User.Claims.IsExpired())
+            {
+
                 await FeatureService.InitializeFeaturesAsync();
                 StateHasChanged();
             }
@@ -85,6 +94,17 @@ public partial class MainLayout : IDisposable
             CloseButton = true,
             CloseOnEscapeKey = true
         });
+    }
+
+    private void Login()
+    {
+        Navigation.NavigateTo("Signin", true);
+        
+    }
+
+    private void Logout()
+    {
+        Navigation.NavigateTo("Signout", true);
     }
 
     void IDisposable.Dispose()

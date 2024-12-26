@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using Elsa.Studio.Localization
+@inherits LayoutComponentBase
+@inject ILocalizer Localizer
 
 <MudThemeProvider IsDarkMode="@IsDarkMode" Theme="CurrentTheme"/>
 <MudPopoverProvider/>
@@ -27,6 +29,17 @@
         }
 
         <MudIconButton Icon="@Icons.Material.Outlined.Info" Color="Color.Inherit" @onclick="@ShowProductInfo"/>
+
+        @if (IsLogin)
+        {
+            <MudMenu StartIcon="@Icons.Material.Filled.Person" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@UserName" Color="Color.Inherit">
+                <MudMenuItem OnClick="@Logout">@Localizer["Logout"]</MudMenuItem>
+            </MudMenu>
+        }
+        else
+        {
+            <MudButton Variant="Variant.Outlined" Color="Color.Inherit" OnClick="@Login">@Localizer["Login"]</MudButton>
+        }
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="0" ClipMode="DrawerClipMode.Always">
         <MudDrawerHeader>

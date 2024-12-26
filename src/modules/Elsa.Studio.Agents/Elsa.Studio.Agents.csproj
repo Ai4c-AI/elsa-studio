@@ -15,9 +15,6 @@
         <ProjectReference Include="..\Elsa.Studio.Workflows\Elsa.Studio.Workflows.csproj" />
     </ItemGroup>
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-	<ItemGroup>
 	  <PackageReference Include="Ai4c.Agents.Models" />
 	</ItemGroup>
 

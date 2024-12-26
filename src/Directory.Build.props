@@ -4,15 +4,22 @@
 
   <PropertyGroup Label="TargetFrameworks">
     <TargetFramework>net8.0</TargetFramework>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <AnalysisModeDocumentation>Default</AnalysisModeDocumentation>
+	  <AnalysisLevelDocumentation>latest</AnalysisLevelDocumentation>
+	  <OutputPath>$(SolutionDir)packages</OutputPath>
+	  <NuGetAudit>enable</NuGetAudit>
+	  <NuGetAuditMode>all</NuGetAuditMode>
+	  <VersionPrefix>3.3.0-rc4-ai4c1</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup Label="Files">
     <None Include="..\..\..\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+	</ItemGroup>
 </Project>
