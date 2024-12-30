@@ -2,6 +2,7 @@ using Elsa.Studio.Branding;
 using Elsa.Studio.Components;
 using Elsa.Studio.Contracts;
 using Elsa.Studio.Extensions;
+using Elsa.Studio.Login.Contracts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -24,6 +25,8 @@ public partial class MainLayout : IDisposable
     [Inject] private IDialogService DialogService { get; set; } = default!;
     [Inject] private IBrandingProvider BrandingProvider { get; set; } = default!;
     [Inject] private IServiceProvider ServiceProvider { get; set; } = default!;
+    [Inject] private IJwtAccessor JwtAccessor { get; set; } = default!;
+
     [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
     private MudTheme CurrentTheme => ThemeService.CurrentTheme;
     private bool IsDarkMode => ThemeService.IsDarkMode;
@@ -35,10 +38,30 @@ public partial class MainLayout : IDisposable
     [Inject] private NavigationManager Navigation { get; set; } = default!;
 
     /// <inheritdoc />
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
         ThemeService.CurrentThemeChanged += OnThemeChanged;
         AppBarService.AppBarItemsChanged += OnAppBarItemsChanged;
+    }
+
+    /// <inheritdoc />
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            if (AuthenticationState != null)
+            {
+                var authState = await AuthenticationState;
+                if (authState.User.Identity?.IsAuthenticated == true)
+                {
+                    var accessToken = authState.User?.FindFirst("access_token");
+                    await JwtAccessor.WriteTokenAsync("access_token", accessToken?.Value ?? "");
+
+                }
+            }
+        }
+
     }
 
     /// <inheritdoc />
@@ -99,7 +122,7 @@ public partial class MainLayout : IDisposable
     private void Login()
     {
         Navigation.NavigateTo("Signin", true);
-        
+
     }
 
     private void Logout()

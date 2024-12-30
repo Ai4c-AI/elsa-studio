@@ -2,10 +2,6 @@ using Elsa.Api.Client.Resources.Identity.Responses;
 using Elsa.Studio.Contracts;
 using Elsa.Studio.Login.Contracts;
 using ElsaStudioServer;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Components;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -21,11 +17,9 @@ public class KeyCloackAuthenticatingApiHttpMessageHandler(IRemoteBackendAccessor
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var sp = blazorServiceAccessor.Services;
-        var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-        var user = httpContextAccessor?.HttpContext?.User;
-
-        var accessToken = user?.FindFirst(ClaimType.AccessToken);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken?.Value ?? "");
+        var jwtAccessor = sp.GetRequiredService<IJwtAccessor>();
+        var accessToken = await jwtAccessor.ReadTokenAsync(ClaimType.AccessToken);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken ?? "");
 
         var response = await base.SendAsync(request, cancellationToken);
 

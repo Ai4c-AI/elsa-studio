@@ -11,7 +11,7 @@
 	  <OutputPath>$(SolutionDir)packages</OutputPath>
 	  <NuGetAudit>enable</NuGetAudit>
 	  <NuGetAuditMode>all</NuGetAuditMode>
-	  <VersionPrefix>3.3.0-rc4-ai4c1</VersionPrefix>
+	  <VersionPrefix>3.3.0-rc4-ai4c3</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup Label="Files">
